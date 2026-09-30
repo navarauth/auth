@@ -9,38 +9,41 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-text-size-adjust: 100%;
     font-family: 'Inter', system-ui, sans-serif;
     background: linear-gradient(180deg, #3a88d4 0%, #7fd3f7 55%, #ffffff 100%);
     display: flex; justify-content: center; align-items: flex-start;
-    padding: 130px 24px 24px;
+    padding: clamp(40px, 12vh, 110px) 16px 24px;
   }
-  .card { width: 100%; max-width: 420px; background: #fff; border-radius: 26px; overflow: hidden; }
+  .card { width: 100%; max-width: 400px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
   .header {
-    padding: 28px 26px 26px;
+    padding: 20px 20px 18px;
     color: #fff;
     background: linear-gradient(120deg, #74ccf3, #3a88d4);
   }
-  .header h1 { font-size: 34px; font-weight: 800; }
-  .header p { margin-top: 6px; font-size: 15px; }
-  form { padding: 24px 24px 40px; }
-  label { display: block; font-size: 14px; color: #222; margin-bottom: 8px; }
-  .field { position: relative; margin-bottom: 20px; }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p { margin-top: 4px; font-size: 13px; opacity: .95; }
+  form { padding: 20px 20px 28px; }
+  label { display: block; font-size: 13px; color: #222; margin-bottom: 6px; }
+  .field { position: relative; margin-bottom: 16px; }
   .field input {
-    width: 100%; height: 46px; padding: 0 46px 0 14px;
-    border: 1px solid #d5d5d5; border-radius: 12px;
-    font: inherit; font-size: 15px; outline: none;
+    width: 100%; height: 44px; padding: 0 48px 0 12px;
+    border: 1px solid #d5d5d5; border-radius: 10px;
+    font: inherit; font-size: 14px; outline: none;
   }
   .field input:focus { border-color: #3a88d4; }
   .eye {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-    background: none; border: 0; cursor: pointer; color: #aaa; font-size: 18px; line-height: 1;
+    position: absolute; right: 0; top: 0; width: 44px; height: 44px;
+    background: none; border: 0; cursor: pointer; color: #aaa; font-size: 16px; line-height: 1;
+    -webkit-tap-highlight-color: transparent;
   }
-  #error { color: #d33; font-size: 13px; min-height: 18px; margin-bottom: 10px; }
+  #error { color: #d33; font-size: 12px; min-height: 16px; margin-bottom: 8px; }
   #submit {
-    width: 100%; height: 52px; border: 0; border-radius: 14px; cursor: pointer;
-    color: #fff; font: inherit; font-size: 16px; font-weight: 700;
+    width: 100%; height: 46px; border: 0; border-radius: 12px; cursor: pointer;
+    color: #fff; font: inherit; font-size: 14px; font-weight: 600;
     background: linear-gradient(120deg, #74ccf3, #3a88d4);
-    box-shadow: 0 6px 14px rgba(58,136,212,.35);
+    box-shadow: 0 4px 10px rgba(58,136,212,.3);
   }
   #submit:disabled { opacity: .6; cursor: default; }
 
@@ -52,13 +55,13 @@
   .overlay.show { display: flex; }
   .modal {
     width: 100%; max-width: 300px; background: #fff; border-radius: 14px;
-    padding: 34px 24px 24px; text-align: center;
+    padding: 26px 20px 20px; text-align: center;
   }
-  .modal h2 { font-size: 16px; font-weight: 700; color: #333; }
-  .modal p { margin: 28px 0 32px; font-size: 14px; color: #222; }
+  .modal h2 { font-size: 15px; font-weight: 600; color: #333; }
+  .modal p { margin: 18px 0 22px; font-size: 13px; color: #222; }
   .modal button {
-    width: 100%; height: 38px; border: 0; border-radius: 10px; cursor: pointer;
-    background: #3fa0e0; color: #fff; font: inherit; font-size: 14px; font-weight: 700;
+    width: 100%; height: 40px; border: 0; border-radius: 10px; cursor: pointer;
+    background: #3fa0e0; color: #fff; font: inherit; font-size: 14px; font-weight: 600;
   }
 </style>
 </head>
@@ -111,6 +114,7 @@
     if (event === "PASSWORD_RECOVERY") recoveryReady = true;
   });
 
+  // Show/hide password
   document.querySelectorAll(".eye").forEach((btn) => {
     btn.addEventListener("click", () => {
       const input = $(btn.dataset.target);
@@ -136,7 +140,6 @@
     if (pw.length < 6) { errorEl.textContent = "Password must be at least 6 characters."; return; }
     if (pw !== pw2)    { errorEl.textContent = "Passwords do not match."; return; }
 
-    // Make sure the reset link was valid
     const { data } = await sb.auth.getSession();
     if (!recoveryReady && !data.session) {
       errorEl.textContent = "This reset link is invalid or expired. Please request a new one.";
@@ -149,10 +152,10 @@
 
     if (error) { errorEl.textContent = error.message; return; }
 
-    await sb.auth.signOut(); // don't leave a session open in the browser
+    await sb.auth.signOut(); 
     $("form").reset();
     showModal("Success", "Password changed successfully!", () => {
-
+      // window.location.href = "yourgame://login";
     });
   });
 </script>
