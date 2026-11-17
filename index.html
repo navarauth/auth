@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reset Password</title>
+<title>NavAR</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,146 +27,49 @@
   }
   .header h1 { font-size: 22px; font-weight: 700; }
   .header p { margin-top: 4px; font-size: 13px; opacity: .95; }
-  form { padding: 20px 20px 28px; }
-  label { display: block; font-size: 13px; color: #222; margin-bottom: 6px; }
-  .field { position: relative; margin-bottom: 16px; }
-  .field input {
-    width: 100%; height: 44px; padding: 0 48px 0 12px;
-    border: 1px solid #d5d5d5; border-radius: 10px;
-    font: inherit; font-size: 14px; outline: none;
-  }
-  .field input:focus { border-color: #3a88d4; }
-  .eye {
-    position: absolute; right: 0; top: 0; width: 44px; height: 44px;
-    background: none; border: 0; cursor: pointer; color: #aaa; font-size: 16px; line-height: 1;
-    -webkit-tap-highlight-color: transparent;
-  }
-  #error { color: #d33; font-size: 12px; min-height: 16px; margin-bottom: 8px; }
-  #submit {
+  .body { padding: 24px 20px 28px; text-align: center; }
+  .body p { font-size: 14px; color: #222; margin-bottom: 20px; }
+  #openApp {
     width: 100%; height: 46px; border: 0; border-radius: 12px; cursor: pointer;
     color: #fff; font: inherit; font-size: 14px; font-weight: 600;
     background: linear-gradient(120deg, #74ccf3, #3a88d4);
     box-shadow: 0 4px 10px rgba(58,136,212,.3);
   }
-  #submit:disabled { opacity: .6; cursor: default; }
-
-  /* Alert modal */
-  .overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,.45);
-    display: none; justify-content: center; align-items: center; padding: 24px;
-  }
-  .overlay.show { display: flex; }
-  .modal {
-    width: 100%; max-width: 300px; background: #fff; border-radius: 14px;
-    padding: 26px 20px 20px; text-align: center;
-  }
-  .modal h2 { font-size: 15px; font-weight: 600; color: #333; }
-  .modal p { margin: 18px 0 22px; font-size: 13px; color: #222; }
-  .modal button {
-    width: 100%; height: 40px; border: 0; border-radius: 10px; cursor: pointer;
-    background: #3fa0e0; color: #fff; font: inherit; font-size: 14px; font-weight: 600;
-  }
+  #landing { display: none; }
 </style>
 </head>
 <body>
 
 <div class="card">
   <div class="header">
-    <h1>Reset Password</h1>
-    <p>Change your password</p>
+    <h1>NavAR</h1>
+    <p id="subtitle">Redirecting...</p>
   </div>
-  <form id="form">
-    <label for="pw">New Password</label>
-    <div class="field">
-      <input id="pw" type="password" placeholder="Enter here" autocomplete="new-password">
-      <button type="button" class="eye" data-target="pw" aria-label="Show password"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
-    </div>
 
-    <label for="pw2">Confirm Password</label>
-    <div class="field">
-      <input id="pw2" type="password" placeholder="Enter here" autocomplete="new-password">
-      <button type="button" class="eye" data-target="pw2" aria-label="Show password"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
-    </div>
-
-    <div id="error"></div>
-    <button id="submit" type="submit">Change Password</button>
-  </form>
-</div>
-
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <h2 id="modalTitle">Success</h2>
-    <p id="modalMsg">Password changed successfully!</p>
-    <button id="okBtn">OK</button>
+  <div class="body" id="landing">
+    <p>Open the NavAR app to sign in or manage your account.</p>
+    <button id="openApp">Open NavAR</button>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
+  const hash = window.location.hash;      // Supabase puts tokens here
+  const search = window.location.search;  // or here, depending on the flow
 
-  const SUPABASE_URL = "https://kblobarjzrloqjikpbun.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtibG9iYXJqenJsb3FqaWtwYnVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzOTQ0MjksImV4cCI6MjEwNDk3MDQyOX0.-O4t_Nt789rtB19bXbzUn0x4qepBVxlfh2ibDjwp03Y";
-
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const $ = (id) => document.getElementById(id);
-  const errorEl = $("error"), submitBtn = $("submit");
-  let recoveryReady = false;
-
-  sb.auth.onAuthStateChange((event) => {
-    if (event === "PASSWORD_RECOVERY") recoveryReady = true;
-  });
-
-  // Show/hide password
-  const EYE = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>`;
-  const EYE_OFF = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a19.8 19.8 0 0 1 5.06-5.94M9.9 4.24A10.9 10.9 0 0 1 12 5c7 0 11 7 11 7a19.7 19.7 0 0 1-3.17 4.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
-
-  document.querySelectorAll(".eye").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const input = $(btn.dataset.target);
-      const show = input.type === "password";
-      input.type = show ? "text" : "password";
-      btn.innerHTML = show ? EYE_OFF : EYE;
-      btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
-    });
-  });
-
-  function showModal(title, msg, onOk) {
-    $("modalTitle").textContent = title;
-    $("modalMsg").textContent = msg;
-    $("overlay").classList.add("show");
-    $("okBtn").onclick = () => {
-      $("overlay").classList.remove("show");
-      if (onOk) onOk();
+  // Direct visit with no link data: show a simple landing page
+  if (!hash && !search) {
+    document.getElementById("subtitle").textContent = "Welcome";
+    document.getElementById("landing").style.display = "block";
+    document.getElementById("openApp").onclick = () => {
+      window.location.href = "navar://auth-callback";
     };
+  } else {
+    // Old or generic link: send it to the right page and keep the token
+    const data = hash + "&" + search;
+    const isSignup = data.includes("type=signup") || data.includes("type=email");
+    const target = isSignup ? "confirm-email/" : "reset-password/";
+    window.location.replace(target + search + hash);
   }
-
-  $("form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    errorEl.textContent = "";
-    const pw = $("pw").value, pw2 = $("pw2").value;
-
-    if (pw.length < 6) { errorEl.textContent = "Password must be at least 6 characters."; return; }
-    if (pw !== pw2)    { errorEl.textContent = "Passwords do not match."; return; }
-
-    const { data } = await sb.auth.getSession();
-    if (!recoveryReady && !data.session) {
-      errorEl.textContent = "This reset link is invalid or expired. Please request a new one.";
-      return;
-    }
-
-    submitBtn.disabled = true;
-    const { error } = await sb.auth.updateUser({ password: pw });
-    submitBtn.disabled = false;
-
-    if (error) { errorEl.textContent = error.message; return; }
-
-    await sb.auth.signOut();
-    $("form").reset();
-    showModal("Success", "Password changed successfully!", () => {
-      // window.location.href = "yourgame://login";
-    });
-  });
 </script>
 </body>
 </html>
