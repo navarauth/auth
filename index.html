@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NavAR</title>
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,7 +67,7 @@
     // Old or generic link: send it to the right page and keep the token
     const data = hash + "&" + search;
     const isSignup = data.includes("type=signup") || data.includes("type=email");
-    const target = isSignup ? "confirm-email/" : "reset-password/";
+    const target = isSignup ? "confirm-email" : "reset-password";
     window.location.replace(target + search + hash);
   }
 </script>
